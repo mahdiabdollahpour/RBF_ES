@@ -32,6 +32,24 @@ def classification_data(number_of_records, dim, number_of_classes):
     return x_data, y_data
 
 
+def classification_data2(number_of_records, dim, number_of_classes):
+    from sklearn.datasets import make_gaussian_quantiles
+    # Construct dataset
+    # Gaussian 1
+    recs = int(number_of_records/2)
+    X1, y1 = make_gaussian_quantiles(cov=3.,
+                                     n_samples=recs, n_features=dim,
+                                     n_classes=number_of_classes, random_state=1)
+
+    # Gaussian 2
+    X2, y2 = make_gaussian_quantiles(mean=(4, 4), cov=1,
+                                     n_samples=recs, n_features=dim,
+                                     n_classes=number_of_classes, random_state=1)
+    x = np.concatenate((X1, X2), axis=0)
+    y = np.concatenate((y1, y2), axis=0)
+    return x, y
+
+
 def regression_data(number_of_records, dim):
     x_data = np.random.rand(number_of_records, dim)
     y_data = np.random.rand(number_of_records, 1)

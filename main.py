@@ -1,10 +1,11 @@
 import data_generator
 import numpy as np
 
-class_num = 3
+class_num = 2
 dim = 2
+number_of_circles = 4
 
-x, y = data_generator.classification_data(number_of_records=500, dim=dim, number_of_classes=class_num)
+x, y = data_generator.classification_data2(number_of_records=500, dim=dim, number_of_classes=class_num)
 # print(np.argwhere(y))
 # print(y)
 
@@ -24,12 +25,11 @@ plots.plot_classification_data(x, y)
 import ES
 import RBF
 
-number_of_circles = class_num
 chromosome_size = (dim + 1) * number_of_circles
 
 es = ES.ES(50, RBF.evaluate, RBF.classification_loss, x, y, chromosome_size)
 
-pop = es.solve_problem(NGEN=1)
+pop = es.solve_problem(NGEN=10)
 
 best = es.get_best_in_pop(pop)
 print("best", best)

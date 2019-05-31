@@ -68,5 +68,4 @@ class ES():
         return pop
 
     def get_best_in_pop(self, pop):
-
         return min(pop, key=self.eval)
