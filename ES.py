@@ -30,8 +30,10 @@ class ES():
         self.eval = lambda x: self.evaluate(loss, x_data, y_data, x)
 
     def mutate_function(self, min_sigma, max_sigma, indpb, mu, I_GEN, N_GEN, individual):
+        sigma  =max_sigma + (min_sigma - max_sigma) * I_GEN / N_GEN
+        # print("sigma",sigma)
         return tools.mutGaussian(individual=individual, mu=mu,
-                                 sigma=max_sigma + (min_sigma - max_sigma) * I_GEN / N_GEN, indpb=indpb)
+                                 sigma=sigma, indpb=indpb)
 
     def solve_problem(self, CXPB=0.2, MUTPB=0.3, NGEN=40):
         pop = self.toolbox.population(n=self.pop_size)

@@ -32,7 +32,7 @@ def classification_evaluator(loss, x_data, y_data, individual):
     W = np.matmul(np.matmul(np.linalg.inv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)), y_prime)
     y_hat = np.matmul(G, W)
     l = loss(y_prime, y_hat)
-    print("how good?", l)
+    print("Train set Accuracy:", l)
     return -1 * l,
 
 

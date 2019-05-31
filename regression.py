@@ -4,7 +4,7 @@ import numpy as np
 ## TODO: clear the code, data and test or regression, split data, change sigma for ES from max to min by NGEN
 class_num = 2
 dim = 2
-number_of_circles = 6
+number_of_circles = 10
 
 # x, y = data_generator.classification_data2(number_of_records=500, dim=dim, number_of_classes=class_num)
 x, y = data_generator.regression_data2(500, dim)
@@ -23,7 +23,7 @@ x = preprocessing.scale(x)
 y = preprocessing.scale(y)
 # x.mean(axis=0)
 # x.std(axis=0)
-print(x)
+# print(x)
 # plots.plot_classification_data(x, y)
 
 import ES

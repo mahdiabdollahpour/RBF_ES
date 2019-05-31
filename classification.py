@@ -4,7 +4,7 @@ import numpy as np
 ## TODO: clear the code, data and test or regression, split data, change sigma for ES from max to min by NGEN
 class_num = 2
 dim = 2
-number_of_circles = 4
+number_of_circles = 6
 
 # x, y = data_generator.classification_data2(number_of_records=500, dim=dim, number_of_classes=class_num)
 x, y = data_generator.moon_data(500)
