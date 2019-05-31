@@ -44,6 +44,26 @@ def classification_data(number_of_records, dim, number_of_classes):
     return x_data, y_data
 
 
+def regression_data2(number_of_records, dim):
+    data = []
+    n_groups = 2
+    recs = int(number_of_records / n_groups)
+    for i in range(n_groups - 1):
+        data.append(np.random.normal(5 * i, 1, size=(recs, dim)))
+        # data2 = np.random.normal(12, 1, size=(re, dim))
+    data.append(np.random.normal(5 * (n_groups - 1), 1,
+                                 size=(number_of_records - (n_groups - 1) * recs, dim)))
+    y = []
+    for i in range(n_groups - 1):
+        y.append((i) * np.ones(shape=(recs)))
+    y.append(np.random.normal(20 * (n_groups - 1), 1, size=(number_of_records - (n_groups - 1) * recs)))
+    x_data = np.concatenate(tuple(i for i in data), axis=0)
+    y_data = np.concatenate(tuple(i for i in y), axis=0)
+    y_data = y_data.astype(int)
+
+    return x_data, y_data
+
+
 def classification_data2(number_of_records, dim, number_of_classes):
     from sklearn.datasets import make_gaussian_quantiles
     # Construct dataset

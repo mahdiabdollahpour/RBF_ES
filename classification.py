@@ -30,16 +30,16 @@ import RBF
 
 chromosome_size = (dim + 1) * number_of_circles
 
-es = ES.ES(50, RBF.evaluate, RBF.classification_loss, x, y, chromosome_size, min_sigma_mut=0.2, max_sigma_mut=0.8,
+es = ES.ES(50, RBF.classification_evaluator, RBF.classification_loss, x, y, chromosome_size, min_sigma_mut=0.2, max_sigma_mut=0.8,
            indpb_mut=0.1)
 
 pop = es.solve_problem(NGEN=10)
 
 best = es.get_best_in_pop(pop)
 print("best", best)
-print(RBF.evaluate(RBF.classification_loss, x, y, best))
+print(RBF.classification_evaluator(RBF.classification_loss, x, y, best))
 
-ans = RBF.get_y(best, x, y)
+ans = RBF.get_y_classification(best, x, y)
 import matplotlib.pyplot as plt
 
 ax = plt.gca()
