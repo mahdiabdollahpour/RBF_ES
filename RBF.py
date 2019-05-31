@@ -54,7 +54,7 @@ def get_y(individual, x_data, y_data):
             G[i][j] = g_func(v, sigma=individual[(dim + 1) * (j - 1) + dim + 1], x=x_data[i])
     W = np.matmul(np.matmul(np.linalg.inv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)), y_prime)
     y_hat = np.matmul(G, W)
-    print("y_hat", y_hat)
+    # print("y_hat", y_hat)
     y = np.argmax(y_hat, axis=1)
     return y
 

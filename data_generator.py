@@ -1,4 +1,16 @@
 import numpy as np
+from sklearn.datasets import make_moons
+from sklearn.datasets import make_regression
+
+
+def moon_data(number_of_records):
+    x, y = make_moons(n_samples=number_of_records, noise=0.1)
+    return x, y
+
+
+def regression_data(number_of_records, dim):
+    X, y = make_regression(number_of_records, n_features=dim, noise=0.1)
+    return X, y
 
 
 def random_classification_data(number_of_records, dim, number_of_classes):
@@ -36,7 +48,7 @@ def classification_data2(number_of_records, dim, number_of_classes):
     from sklearn.datasets import make_gaussian_quantiles
     # Construct dataset
     # Gaussian 1
-    recs = int(number_of_records/2)
+    recs = int(number_of_records / 2)
     X1, y1 = make_gaussian_quantiles(cov=3.,
                                      n_samples=recs, n_features=dim,
                                      n_classes=number_of_classes, random_state=1)
@@ -55,6 +67,7 @@ def regression_data(number_of_records, dim):
     y_data = np.random.rand(number_of_records, 1)
     return x_data, y_data
 
+
 #
 # def normalize_data(data):
 #     mu = np.mean(data, axis=0)
@@ -68,3 +81,23 @@ def regression_data(number_of_records, dim):
 #     mat[0] = np.reciprocal(sigma)
 #     data = np.matmul(data, mat)
 #     return data, mu, sigma
+
+
+def unison_shuffled_copies(a, b):
+    assert len(a) == len(b)
+    p = np.random.permutation(len(a))
+    return a[p], b[p]
+
+
+def split_data(x, y):
+    r = len(x)
+    train = int(0.8 * r)
+    validation = int(0.2 * r)
+    # test = r - validation - train
+    x_train = x[:train]
+    x_validation = x[train:train + validation]
+    x_test = x[train + validation:]
+    y_train = y[:train]
+    y_validation = y[train:train + validation]
+    y_test = y[train + validation:]
+    return x_train, x_validation, x_test, y_train, y_validation, y_test

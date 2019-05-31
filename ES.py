@@ -7,7 +7,7 @@ from params import *
 
 
 class ES():
-    def __init__(self, pop_size, evaluate, loss, x_data, y_data, IND_SIZE):
+    def __init__(self, pop_size, evaluate, loss, x_data, y_data, IND_SIZE, min_sigma_mut, max_sigma_mut, indpb_mut):
         # self.IND_SIZE = IND_SIZE
         self.pop_size = pop_size
         self.evaluate = evaluate
@@ -23,10 +23,15 @@ class ES():
 
         self.toolbox.register("mate", tools.cxTwoPoint)
         # self.toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=1, indpb=0.1)
-        self.toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.2, indpb=0.1)
+        self.toolbox.register("mutate", self.mutate_function, max_sigma=max_sigma_mut, min_sigma=min_sigma_mut,
+                              indpb=indpb_mut, mu=0)
         self.toolbox.register("select", tools.selTournament, tournsize=10)
         self.toolbox.register("evaluate", self.evaluate, loss, x_data, y_data)
         self.eval = lambda x: self.evaluate(loss, x_data, y_data, x)
+
+    def mutate_function(self, min_sigma, max_sigma, indpb, mu, I_GEN, N_GEN, individual):
+        return tools.mutGaussian(individual=individual, mu=mu,
+                                 sigma=max_sigma + (min_sigma - max_sigma) * I_GEN / N_GEN, indpb=indpb)
 
     def solve_problem(self, CXPB=0.2, MUTPB=0.3, NGEN=40):
         pop = self.toolbox.population(n=self.pop_size)
@@ -53,7 +58,7 @@ class ES():
 
             for mutant in offspring:
                 if random.random() < MUTPB:
-                    self.toolbox.mutate(mutant)
+                    self.toolbox.mutate(I_GEN=g, N_GEN=NGEN, individual=mutant)
                     del mutant.fitness.values
 
             # Evaluate the individuals with an invalid fitness
