@@ -5,6 +5,22 @@ from deap import tools
 # from fitness import evaluate
 from params import *
 
+## TODO: fix cross over
+
+
+def find_circle_coordinates(x_train, y_train, number_of_circles, evaluator, loss):
+    dim = len(x_train[0])
+    chromosome_size = (dim + 1) * number_of_circles
+
+    es = ES(50, evaluator, loss, x_train, y_train, chromosome_size,
+               min_sigma_mut=0.2,
+               max_sigma_mut=0.8,
+               indpb_mut=0.1)
+
+    pop = es.solve_problem(NGEN=10)
+    best = es.get_best_in_pop(pop)
+    return best
+
 
 class ES():
     def __init__(self, pop_size, evaluate, loss, x_data, y_data, IND_SIZE, min_sigma_mut, max_sigma_mut, indpb_mut):
@@ -26,11 +42,11 @@ class ES():
         self.toolbox.register("mutate", self.mutate_function, max_sigma=max_sigma_mut, min_sigma=min_sigma_mut,
                               indpb=indpb_mut, mu=0)
         self.toolbox.register("select", tools.selTournament, tournsize=10)
-        self.toolbox.register("evaluate", self.evaluate, loss, x_data, y_data)
-        self.eval = lambda x: self.evaluate(loss, x_data, y_data, x)
+        self.eval = lambda x: self.evaluate(loss, x_data, y_data, x_data, y_data, x)
+        self.toolbox.register("evaluate", self.eval)
 
     def mutate_function(self, min_sigma, max_sigma, indpb, mu, I_GEN, N_GEN, individual):
-        sigma  =max_sigma + (min_sigma - max_sigma) * I_GEN / N_GEN
+        sigma = max_sigma + (min_sigma - max_sigma) * I_GEN / N_GEN
         # print("sigma",sigma)
         return tools.mutGaussian(individual=individual, mu=mu,
                                  sigma=sigma, indpb=indpb)

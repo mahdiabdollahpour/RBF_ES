@@ -112,7 +112,7 @@ def unison_shuffled_copies(a, b):
 def split_data(x, y):
     r = len(x)
     train = int(0.8 * r)
-    validation = int(0.2 * r)
+    validation = int(0.1 * r)
     # test = r - validation - train
     x_train = x[:train]
     x_validation = x[train:train + validation]
