@@ -1,6 +1,23 @@
 import numpy as np
 from sklearn.datasets import make_moons
 from sklearn.datasets import make_regression
+import xlrd
+
+
+def load_excel_data(file_name):
+    loc = (file_name)
+    wb = xlrd.open_workbook(loc)
+    sheet = wb.sheet_by_index(0)
+    sheet.cell_value(0, 0)
+    data = np.zeros((sheet.nrows, sheet.ncols))
+    for i in range(sheet.nrows):
+        for j in range(sheet.ncols):
+            data[i, j] = sheet.cell_value(i, j)
+    data = np.array(data)
+    y = data[:, data.shape[1] - 1]
+
+    x = data[:, :data.shape[1]-1]
+    return x, y
 
 
 def moon_data(number_of_records):
@@ -50,16 +67,14 @@ def regression_data2(number_of_records, dim):
     recs = int(number_of_records / n_groups)
     for i in range(n_groups - 1):
         data.append(np.random.normal(5 * i, 1, size=(recs, dim)))
-        # data2 = np.random.normal(12, 1, size=(re, dim))
     data.append(np.random.normal(5 * (n_groups - 1), 1,
                                  size=(number_of_records - (n_groups - 1) * recs, dim)))
     y = []
     for i in range(n_groups - 1):
-        y.append((i) * np.ones(shape=(recs)))
+        y.append(np.random.normal(20 * i, 1, size=(recs)))
     y.append(np.random.normal(20 * (n_groups - 1), 1, size=(number_of_records - (n_groups - 1) * recs)))
     x_data = np.concatenate(tuple(i for i in data), axis=0)
     y_data = np.concatenate(tuple(i for i in y), axis=0)
-    y_data = y_data.astype(int)
 
     return x_data, y_data
 
@@ -109,10 +124,10 @@ def unison_shuffled_copies(a, b):
     return a[p], b[p]
 
 
-def split_data(x, y):
+def split_data(x, y, a, b):
     r = len(x)
-    train = int(0.8 * r)
-    validation = int(0.1 * r)
+    train = int(a * r)
+    validation = int(b * r)
     # test = r - validation - train
     x_train = x[:train]
     x_validation = x[train:train + validation]

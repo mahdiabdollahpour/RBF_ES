@@ -12,12 +12,14 @@ def plot_points(x, colors):
     plt.show()
 
 
-def plot_classification_data(x, y):
-    class1 = np.array([x[i] for i in range(len(x)) if y[i] == 0])
-    class2 = np.array([x[i] for i in range(len(x)) if y[i] == 1])
-    class3 = np.array([x[i] for i in range(len(x)) if y[i] == 2])
-
-    plot_points([class1, class2, class3], ['ro', 'bo', 'go'])
+def plot_classification_data(x, y, classes):
+    class1 = np.array([x[i] for i in range(len(x)) if y[i] == classes[0]])
+    class2 = np.array([x[i] for i in range(len(x)) if y[i] == classes[1]])
+    list = [class1,class2]
+    if len(classes) > 2:
+        class3 = np.array([x[i] for i in range(len(x)) if y[i] == classes[2]])
+        list.append(class3)
+    plot_points([class1, class2], ['ro', 'bo', 'go'])
 
 
 # ~~~~ MODIFICATION TO EXAMPLE BEGINS HERE ~~~~ #
@@ -65,7 +67,6 @@ def surface_plot(x, y, z):
 
 
 def scatter_plot(x, y, z):
-
     fig = plt.figure()
     ax = Axes3D(fig)
 

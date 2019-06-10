@@ -1,33 +1,34 @@
 import data_generator
 import numpy as np
 
-class_num = 2
+class_num = 3
 dim = 2
-number_of_circles = 4
-import plots
-from sklearn import preprocessing
+number_of_circles = 3
 
-x, y = data_generator.moon_data(1000)
+from sklearn import preprocessing
+import plots
+
+x, y = data_generator.classification_data(500, dim, class_num)
 plots.plot_classification_data(x, y)
 
 x = preprocessing.scale(x)
 
 plots.plot_classification_data(x, y)
 
-# x, y = data_generator.classification_data2(number_of_records=500, dim=dim, number_of_classes=class_num)
-
 x, y = data_generator.unison_shuffled_copies(x, y)
+
 x, x_validation, x_test, y, y_validation, y_test = data_generator.split_data(x, y)
 
-import ES
+import OldES
 import RBF
 
-best = ES.find_circle_coordinates(x, y, number_of_circles, RBF.evaluator, RBF.binary_classification_loss)
+best = OldES.find_circle_coordinates(x, y, number_of_circles, RBF.multiclass_evaluator, RBF.multiclass_classification_loss)
 
 print("best", best)
-print(RBF.evaluator(RBF.binary_classification_loss, x, y, x_test, y_test, best))
 
-ans = RBF.get_y_binary_classification(best, x, y, x_test)
+print(RBF.multiclass_evaluator(RBF.multiclass_classification_loss, x, y, x_test, y_test, best))
+
+ans = RBF.get_y_multi_classification(best, x, y, x_test)
 import matplotlib.pyplot as plt
 
 ax = plt.gca()

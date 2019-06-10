@@ -5,9 +5,14 @@ from params import *
 landa = 1
 
 
-def g_func(v, sigma, x):
+# def inv_covariance_matrix(x, v, N):
+#     return (1 / N) * np.linalg.inv(np.matmul(np.transpose(x - v), (x - v)))
+
+
+def g_func(v, sigma, x, N):
     # print("sigma",sigma)
-    return np.exp(-1 * abs(sigma) * np.matmul(np.transpose(x - v), (x - v)))
+    # inv_cov = inv_covariance_matrix(x, v, N)
+    return np.exp(-1 * sigma * np.matmul(np.transpose(x - v), (x - v)))
 
 
 def get_G_matrix(x, individual):
@@ -20,7 +25,7 @@ def get_G_matrix(x, individual):
     for i in range(L):
         for j in range(m):
             v = individual[(dim + 1) * (j - 1):(dim + 1) * (j - 1) + dim]
-            G[i][j] = g_func(v, sigma=individual[(dim + 1) * (j - 1) + dim + 1], x=x[i])
+            G[i][j] = g_func(v, sigma=individual[(dim + 1) * (j - 1) + dim + 1], x=x[i], N=L)
     return G
 
 
@@ -61,10 +66,10 @@ def evaluator(loss, x_train, y_train, x_test, y_test, individual):
     G = get_G_matrix(x_train, individual)
     G2 = get_G_matrix(x_test, individual)
 
-    W = np.matmul(np.matmul(np.linalg.inv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)), y_train)
+    W = np.matmul(np.matmul(np.linalg.pinv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)), y_train)
     y_hat = np.matmul(G2, W)
     l = loss(y_test, y_hat)
-    print("Loss:", l)
+    print("Fitness:", l)
     return -l,
 
 
@@ -79,7 +84,8 @@ def get_y_multi_classification(individual, x_train, y_train, x_test):
         y_prime_train[idx][label] = 1
     G = get_G_matrix(x_train, individual)
     G2 = get_G_matrix(x_test, individual)
-    W = np.matmul(np.matmul(np.linalg.inv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)), y_prime_train)
+    W = np.matmul(np.matmul(np.linalg.inv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)),
+                  y_prime_train)
     y_hat = np.matmul(G2, W)
     y = np.argmax(y_hat, axis=1)
     return y
@@ -94,7 +100,6 @@ def get_y_regression(individual, x_train, y_train, x_test):
     G2 = get_G_matrix(x_test, individual)
     W = np.matmul(np.matmul(np.linalg.inv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)), y_train)
     y_hat = np.matmul(G2, W)
-
     return y_hat
 
 
@@ -111,7 +116,7 @@ def get_y_binary_classification(individual, x_train, y_train, x_test):
 
     W = np.matmul(np.matmul(np.linalg.inv(np.matmul(np.transpose(G), G) + landa * np.eye(m)), np.transpose(G)), y_train)
     # predicted for x_test
-    y_hat = np.heaviside(np.matmul(G2, W),0)
+    y_hat = np.heaviside(np.matmul(G2, W), 0)
 
     return y_hat
 
@@ -125,4 +130,4 @@ def multiclass_classification_loss(y, y_hat):
 
 
 def binary_classification_loss(y_hat, y):
-    return 1 - ((np.sum(np.heaviside(y,0) - y_hat)) / len(y_hat))
+    return 1 - ((np.sum(np.abs(np.sign(y) - y_hat))) / len(y_hat))

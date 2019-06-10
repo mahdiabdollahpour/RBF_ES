@@ -2,27 +2,29 @@ from deap import base, creator
 
 import random
 from deap import tools
+
 # from fitness import evaluate
 from params import *
+
 
 ## TODO: fix cross over
 
 
-def find_circle_coordinates(x_train, y_train, number_of_circles, evaluator, loss):
+def find_circle_coordinates(x_train, y_train, number_of_circles, evaluator, loss, NGEN=10,POPSIZE=50):
     dim = len(x_train[0])
     chromosome_size = (dim + 1) * number_of_circles
 
-    es = ES(50, evaluator, loss, x_train, y_train, chromosome_size,
+    es = OldES(POPSIZE, evaluator, loss, x_train, y_train, chromosome_size,
                min_sigma_mut=0.2,
                max_sigma_mut=0.8,
                indpb_mut=0.1)
 
-    pop = es.solve_problem(NGEN=10)
+    pop = es.solve_problem(NGEN=NGEN)
     best = es.get_best_in_pop(pop)
     return best
 
 
-class ES():
+class OldES():
     def __init__(self, pop_size, evaluate, loss, x_data, y_data, IND_SIZE, min_sigma_mut, max_sigma_mut, indpb_mut):
         # self.IND_SIZE = IND_SIZE
         self.pop_size = pop_size
@@ -37,7 +39,7 @@ class ES():
                               self.toolbox.attribute, n=IND_SIZE)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
 
-        self.toolbox.register("mate", tools.cxTwoPoint)
+        self.toolbox.register("mate", tools.cxBlend, alpha=0.1)
         # self.toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=1, indpb=0.1)
         self.toolbox.register("mutate", self.mutate_function, max_sigma=max_sigma_mut, min_sigma=min_sigma_mut,
                               indpb=indpb_mut, mu=0)
@@ -61,7 +63,7 @@ class ES():
             ind.fitness.values = fit
 
         for g in range(NGEN):
-            print("--------------------------------------------")
+            print("-------------", g, "-------------")
             # Select the next generation individuals
             offspring = self.toolbox.select(pop, self.pop_size)
             # Clone the selected individuals
