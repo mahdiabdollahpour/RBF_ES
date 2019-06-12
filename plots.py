@@ -12,14 +12,32 @@ def plot_points(x, colors):
     plt.show()
 
 
+def plot_regression_result(y_correct, y_model):
+    plt.plot(range(len(y_correct)), y_correct, 'bo')
+    plt.plot(range(len(y_model)), y_model, 'ro')
+    plt.show()
+
+
+def plot_classif_result(x, y_out, y,mul=False):
+    if not mul:
+        y = (y + np.ones(np.shape(y))) / 2
+    class1 = np.array([x[i] for i in range(len(x)) if y_out[i] == y[i]])
+    class2 = np.array([x[i] for i in range(len(x)) if y_out[i] != y[i]])
+    plot_points([class2, class1], ['ro', 'go'])
+
 def plot_classification_data(x, y, classes):
     class1 = np.array([x[i] for i in range(len(x)) if y[i] == classes[0]])
     class2 = np.array([x[i] for i in range(len(x)) if y[i] == classes[1]])
-    list = [class1,class2]
+    list = [class1, class2]
     if len(classes) > 2:
+        # print(len(classes),"Classes")
         class3 = np.array([x[i] for i in range(len(x)) if y[i] == classes[2]])
         list.append(class3)
-    plot_points([class1, class2], ['ro', 'bo', 'go'])
+        class4 = np.array([x[i] for i in range(len(x)) if y[i] == classes[3]])
+        list.append(class4)
+        # class5 = np.array([x[i] for i in range(len(x)) if y[i] == classes[4]])
+        # list.append(class5)
+    plot_points(list, ['ro', 'bo', 'go', 'yo', 'ko'])
 
 
 # ~~~~ MODIFICATION TO EXAMPLE BEGINS HERE ~~~~ #
