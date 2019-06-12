@@ -1,5 +1,5 @@
 import numpy as np
-from params import *
+
 
 # import math
 landa = 1

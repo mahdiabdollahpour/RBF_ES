@@ -7,6 +7,7 @@ import numpy as np
 from sklearn import preprocessing
 
 x_train, y_train = utils.load_excel_data("2clstrain1200.xlsx")
+
 x, y = utils.load_excel_data("2clstest4000.xlsx")
 
 plots.plot_classification_data(x, y, [-1, 1])
@@ -39,6 +40,7 @@ for i in range(number_of_circles):
 ax.set_xlim((min(2 * min(ind), -2), max(2 * max(ind), 2)))
 ax.set_ylim((min(2 * min(ind), -2), max(2 * max(ind), 2)))
 
-# print("ans", ans)
-# plots.plot_classification_data(x, y_out, [1, 0])
+
+y = (y + np.ones(shape=(np.shape(y)))) / 2
+y = y.astype(int)
 plots.plot_classif_result(x=x, y_out=y_out, y=y)

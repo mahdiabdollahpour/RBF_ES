@@ -1,9 +1,9 @@
 import RBF
-import data_generator
+import utils
 from utils import save_obj, load_obj
 import plots
 
-x, y = data_generator.load_excel_data("regdata1500.xlsx")
+x, y = utils.load_excel_data("regdata1500.xlsx")
 
 from sklearn import preprocessing
 
